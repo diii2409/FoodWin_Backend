@@ -14,8 +14,10 @@ app.use(cors());
 
 app.use("/api/my/user", myUserRoute);
 
-app.listen(7000, () => {
-	console.log("server started on localhot:7000");
+const port = process.env.PORT || 7000;
+
+app.listen(port, () => {
+	console.log("server started on https://localhot:7000");
 });
 // connect to database
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() => {
