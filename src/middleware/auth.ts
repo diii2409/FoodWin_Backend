@@ -28,8 +28,7 @@ export const jwtParse = async (
 	// check if the authorization header is present
 	if (!authorization || !authorization.startsWith("Bearer ")) {
 		return res.status(401).json({message: "Unauthorized"});
-	}
-
+	};
 	const token = authorization.split(" ")[1];
 
 	try {
