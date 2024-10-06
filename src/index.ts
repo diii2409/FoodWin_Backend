@@ -1,6 +1,6 @@
 import cors from "cors";
 import "dotenv/config";
-import express from "express";
+import express, {Request, Response} from "express";
 import mongoose from "mongoose";
 import myUserRoute from "./routes/MyUserRoute";
 
@@ -8,9 +8,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// app.get("/test", async ({req, res}: {req: Request; res: Response}) => {
-// 	res.json({message: "hello!"});
-// });
+app.get("/health", async ({req, res}: {req: Request; res: Response}) => {
+	res.send({message: "Health check passed"});
+});
 
 app.use("/api/my/user", myUserRoute);
 
