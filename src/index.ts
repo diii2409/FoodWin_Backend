@@ -1,3 +1,4 @@
+import {v2 as loundinary} from "cloudinary";
 import cors from "cors";
 import "dotenv/config";
 import express, {Request, Response} from "express";
@@ -22,4 +23,10 @@ app.listen(port, () => {
 // connect to database
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() => {
 	console.log("Connected to database");
+});
+
+loundinary.config({
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
 });
