@@ -22,3 +22,5 @@ router.post(
 );
 router.put("/", jwtCheck, MyRestaurantController.updateRestaurant);
 router.get("/", jwtCheck, MyRestaurantController.getRestaurant);
+
+export de
