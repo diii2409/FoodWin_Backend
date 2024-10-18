@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import express, {Request, Response} from "express";
 import mongoose from "mongoose";
+import myRestaurantRoute from "./routes/MyRestaurantRoute";
 import myUserRoute from "./routes/MyUserRoute";
 
 const app = express();
@@ -14,6 +15,7 @@ app.get("/health", async ({req, res}: {req: Request; res: Response}) => {
 });
 
 app.use("/api/my/user", myUserRoute);
+app.use("/api/my/restaurant", myRestaurantRoute);
 
 const port = process.env.PORT || 7000;
 
