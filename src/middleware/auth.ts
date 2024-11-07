@@ -24,11 +24,12 @@ export const jwtParse = async (
 	next: NextFunction,
 ) => {
 	const {authorization} = req.headers;
+	console.log("jwtParse", req.body);
 
 	// check if the authorization header is present
 	if (!authorization || !authorization.startsWith("Bearer ")) {
 		return res.status(401).json({message: "Unauthorized"});
-	};
+	}
 	const token = authorization.split(" ")[1];
 
 	try {
@@ -39,7 +40,6 @@ export const jwtParse = async (
 		if (!user) {
 			return res.status(401).json({message: "User not found"});
 		}
-
 		req.auth0Id = auth0Id as string;
 		req.userId = user._id.toString();
 		next();

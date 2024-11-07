@@ -1,8 +1,9 @@
+// backend/src/routes/MyRestaurantRoute.ts
 import express from "express";
 import multer from "multer";
 import MyRestaurantController from "../controller/MyRestaurantController";
 import {jwtCheck, jwtParse} from "../middleware/auth";
-import {validateMyRestaurantRequest} from "../middleware/validation";
+import { validateMyRestaurantRequest } from "../middleware/validation";
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -17,9 +18,9 @@ const upload = multer({
 router.post(
 	"/",
 	jwtCheck,
+	upload.single("imageFile"),
 	jwtParse,
 	validateMyRestaurantRequest,
-	upload.single("imageFile"),
 	MyRestaurantController.createRestaurant,
 );
 router.put("/", jwtCheck, MyRestaurantController.updateRestaurant);

@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const menuItemShema = new mongoose.Schema({
-  name : {type: String, required: true},
-  price : {type: Number, required: true},
-})
+	name: {type: String, required: true},
+	price: {type: Number, required: true},
+});
 
 const restaurantShema = new mongoose.Schema(
 	{
@@ -12,7 +12,7 @@ const restaurantShema = new mongoose.Schema(
 		city: {type: String, required: true},
 		country: {type: String, required: true},
 		deliveryPrice: {type: Number, required: true},
-		estimateDeliveryTime: {type: Number, required: true},
+		estimatedDeliveryTime: {type: Number, required: true},
 		cuisines: [{type: [String], required: true}],
 		menuItems: [menuItemShema],
 		imageUrl: {type: String, required: true},
