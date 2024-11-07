@@ -5,7 +5,8 @@ import Restaurant from "../models/restaurant";
 // create Restaurant
 const createRestaurant = async (req: Request, res: Response) => {
 	try {
-		const existingRestaurant = await Restaurant.find({user: req.userId});
+		const existingRestaurant = await Restaurant.findOne({user: req.userId});
+		console.log("req.userId", req.userId);
 		if (existingRestaurant) {
 			return res.status(409).json({message: "User restaurant already exists"});
 		}
@@ -18,6 +19,7 @@ const createRestaurant = async (req: Request, res: Response) => {
 		const restaurant = new Restaurant(req.body);
 		restaurant.imageUrl = uploadResponse.url;
 		restaurant.user = new mongoose.Types.ObjectId(req.userId);
+		console.log("restaurant", restaurant);
 		await restaurant.save();
 
 		res.status(201).send(restaurant);

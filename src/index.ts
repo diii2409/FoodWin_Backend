@@ -20,7 +20,7 @@ app.use("/api/my/restaurant", myRestaurantRoute);
 const port = process.env.PORT || 7000;
 
 app.listen(port, () => {
-	console.log("server started on https://localhot:7000");
+	console.log("server started on https://localhost:7000");
 });
 // connect to database
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() => {
