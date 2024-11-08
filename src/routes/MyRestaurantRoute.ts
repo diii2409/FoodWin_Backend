@@ -3,7 +3,7 @@ import express from "express";
 import multer from "multer";
 import MyRestaurantController from "../controller/MyRestaurantController";
 import {jwtCheck, jwtParse} from "../middleware/auth";
-import { validateMyRestaurantRequest } from "../middleware/validation";
+import {validateMyRestaurantRequest} from "../middleware/validation";
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -23,7 +23,14 @@ router.post(
 	validateMyRestaurantRequest,
 	MyRestaurantController.createRestaurant,
 );
-router.put("/", jwtCheck, MyRestaurantController.updateRestaurant);
-router.get("/", jwtCheck, MyRestaurantController.getRestaurant);
+router.put(
+	"/",
+	jwtCheck,
+	upload.single("imageFile"),
+	jwtParse,
+	validateMyRestaurantRequest,
+	MyRestaurantController.updateRestaurant,
+);
+router.get("/", jwtCheck, jwtParse, MyRestaurantController.getRestaurant);
 
 export default router;

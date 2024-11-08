@@ -24,7 +24,6 @@ export const jwtParse = async (
 	next: NextFunction,
 ) => {
 	const {authorization} = req.headers;
-	console.log("jwtParse", req.body);
 
 	// check if the authorization header is present
 	if (!authorization || !authorization.startsWith("Bearer ")) {

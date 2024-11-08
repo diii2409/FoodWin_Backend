@@ -1,4 +1,6 @@
 import {Request, Response} from "express";
+import mongoose from "mongoose";
+import Restaurant from "../models/restaurant";
 import User from "../models/user";
 
 const getCurrentUser = async (req: Request, res: Response) => {
@@ -29,6 +31,10 @@ const createCurrentUser = async (req: Request, res: Response) => {
 		await newUser.save();
 
 		res.status(201).json(newUser.toObject());
+
+		const newRestaurant = new Restaurant();
+		newRestaurant.user = new mongoose.Types.ObjectId(newUser._id);
+		await newRestaurant.save();
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({message: "Error creating user"});

@@ -9,7 +9,7 @@ import myUserRoute from "./routes/MyUserRoute";
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.urlencoded({extended: true})); // Thêm middleware này nếu cần
+app.use(express.urlencoded({extended: true}));
 
 app.get("/health", async ({req, res}: {req: Request; res: Response}) => {
 	res.send({message: "Health check passed"});
