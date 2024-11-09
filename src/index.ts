@@ -5,6 +5,7 @@ import express, {Request, Response} from "express";
 import mongoose from "mongoose";
 import myRestaurantRoute from "./routes/MyRestaurantRoute";
 import myUserRoute from "./routes/MyUserRoute";
+import restaurantRoute from "./routes/restaurantRoute";
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ app.get("/health", async ({req, res}: {req: Request; res: Response}) => {
 
 app.use("/api/my/user", myUserRoute);
 app.use("/api/my/restaurant", myRestaurantRoute);
+app.use("/api/restaurant", restaurantRoute);
 
 const port = process.env.PORT || 7000;
 
