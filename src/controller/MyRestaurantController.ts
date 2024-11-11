@@ -21,7 +21,7 @@ const createRestaurant = async (req: Request, res: Response) => {
 		// if (existingRestaurant) {
 		// 	return res.status(409).json({message: "User restaurant already exists"});
 		// }
-
+		req.body.cuisines = req.body.cuisines;
 		const restaurant = new Restaurant(req.body);
 		if (req.file) {
 			restaurant.imageUrl = await uploadImage(req.file);
@@ -65,7 +65,6 @@ const updateRestaurant = async (req: Request, res: Response) => {
 const getRestaurant = async (req: Request, res: Response) => {
 	try {
 		const restaurant = await Restaurant.findOne({user: req.userId});
-		console.log("restaurant", restaurant);
 		if (!restaurant) {
 			return res.status(404).json({message: "Restaurant not found"});
 		}

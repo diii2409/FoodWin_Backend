@@ -30,8 +30,8 @@ const searchRestaurants = async (req: Request, res: Response) => {
 			const searchRegex = new RegExp(searchQuery, "igs");
 			query["$or"] = [{restaurantName: searchRegex}, {cuisines: {$in: [searchRegex]}}];
 		}
-
-		const pageSize = 10;
+		// page size
+		const pageSize = 5;
 		const skip = (parseInt(page) - 1) * pageSize;
 
 		const restaurants = await Restaurant.find(query)
