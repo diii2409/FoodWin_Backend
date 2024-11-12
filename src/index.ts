@@ -5,20 +5,26 @@ import express, {Request, Response} from "express";
 import mongoose from "mongoose";
 import myRestaurantRoute from "./routes/MyRestaurantRoute";
 import myUserRoute from "./routes/MyUserRoute";
-import restaurantRoute from "./routes/restaurantRoute";
+import orderRouter from "./routes/OrderRoute";
+import restaurantRoute from "./routes/RestaurantRoute";
 
 const app = express();
-app.use(express.json());
-app.use(cors());
-app.use(express.urlencoded({extended: true}));
 
-app.get("/health", async ({req, res}: {req: Request; res: Response}) => {
-	res.send({message: "Health check passed"});
-});
+app.use(cors());
+
+// middleware được sử dụng để xử lý dữ liệu thô (raw data) từ yêu cầu HTTP.
+app.use("/api/order/checkout/webhook", express.raw({type: "*/*"}));
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 app.use("/api/my/user", myUserRoute);
 app.use("/api/my/restaurant", myRestaurantRoute);
 app.use("/api/restaurants", restaurantRoute);
+app.use("/api/order", orderRouter);
+
+app.get("/health", async ({req, res}: {req: Request; res: Response}) => {
+	res.send({message: "Health check passed"});
+});
 
 const port = process.env.PORT || 7000;
 
