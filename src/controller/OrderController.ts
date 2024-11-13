@@ -9,9 +9,40 @@ const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
 
 const getMyOrders = async (req: Request, res: Response) => {
 	try {
-		const orders = await Order.find({user: req.userId}).populate("restaurant").populate("user");
+		const {page = 1} = req.query;
+		const ordersCheck = await Order.countDocuments({user: req.userId});
 
-		res.json(orders);
+		if (ordersCheck === 0) {
+			return res.status(404).json({
+				data: [],
+				pagination: {
+					total: 0,
+					page: 1,
+					pages: 1,
+				},
+			});
+		}
+
+		const pageSize = 5;
+		const skip = ((page as number) - 1) * pageSize;
+
+		const orders = await Order.find({user: req.userId})
+			.populate("restaurant")
+			.populate("user")
+			.sort({createdAt: -1})
+			.skip(skip)
+			.limit(pageSize)
+			.lean();
+
+		const response = {
+			data: orders,
+			pagination: {
+				total: ordersCheck,
+				page: parseInt(page as string),
+				pages: Math.ceil(ordersCheck / pageSize),
+			},
+		};
+		res.json(response);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({message: "something went wrong"});
