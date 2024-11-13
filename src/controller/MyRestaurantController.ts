@@ -1,6 +1,7 @@
 import cloudinary from "cloudinary";
 import {Request, Response} from "express";
 import mongoose from "mongoose";
+import Order from "../models/order";
 import Restaurant from "../models/restaurant";
 
 const uploadImage = async (file: Express.Multer.File) => {
@@ -75,4 +76,74 @@ const getRestaurant = async (req: Request, res: Response) => {
 	}
 };
 
-export default {createRestaurant, updateRestaurant, getRestaurant};
+const getRestaurantOrder = async (req: Request, res: Response) => {
+	try {
+		const {page = 1} = req.query;
+		const restaurant = await Restaurant.findOne({user: req.userId});
+		if (!restaurant) {
+			return res.status(404).json({message: "Restaurant not found"});
+		}
+		const ordersCheck = await Order.countDocuments({restaurant: restaurant._id});
+		if (ordersCheck === 0) {
+			return res.status(404).json({
+				data: [],
+				pagination: {
+					total: 0,
+					page: 1,
+					pages: 1,
+				},
+			});
+		}
+		const pageSize = 5;
+		const skip = ((page as number) - 1) * pageSize;
+
+		const orders = await Order.find({restaurant: restaurant._id})
+			.populate("restaurant")
+			.populate("user")
+			.sort({createdAt: -1})
+			.limit(pageSize)
+			.skip(skip)
+			.lean();
+		const response = {
+			data: orders,
+			pagination: {
+				total: ordersCheck,
+				page: parseInt(page as string),
+				pages: Math.ceil(ordersCheck / pageSize),
+			},
+		};
+		res.json(response);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({message: "Internal server error"});
+	}
+};
+
+const updateOrderStatus = async (req: Request, res: Response) => {
+	try {
+		const {orderId} = req.params;
+		const {status} = req.body;
+		const restaurant = await Restaurant.findOne({user: req.userId});
+		if (!restaurant) {
+			return res.status(404).json({message: "Restaurant not found"});
+		}
+		const order = await Order.findOne({_id: orderId, restaurant: restaurant._id});
+		if (!order) {
+			return res.status(404).json({message: "Order not found"});
+		}
+		order.status = status;
+		await order.save();
+		res.json(order);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({message: "Internal server error"});
+	}
+};
+
+export default {
+	createRestaurant,
+	updateRestaurant,
+	getRestaurant,
+	getRestaurantOrder,
+	updateOrderStatus,
+};
