@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import express, {Request, Response} from "express";
 import mongoose from "mongoose";
+import CloudinayRoute from "./routes/CloudinaryRoute";
 import myRestaurantRoute from "./routes/MyRestaurantRoute";
 import myUserRoute from "./routes/MyUserRoute";
 import orderRouter from "./routes/OrderRoute";
@@ -21,6 +22,7 @@ app.use("/api/my/user", myUserRoute);
 app.use("/api/my/restaurant", myRestaurantRoute);
 app.use("/api/restaurants", restaurantRoute);
 app.use("/api/order", orderRouter);
+app.use("/cloudinary", CloudinayRoute);
 
 app.get("/health", async ({req, res}: {req: Request; res: Response}) => {
 	res.send({message: "Health check passed"});

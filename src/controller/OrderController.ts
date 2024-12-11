@@ -13,7 +13,7 @@ const getMyOrders = async (req: Request, res: Response) => {
 		const ordersCheck = await Order.countDocuments({user: req.userId});
 
 		if (ordersCheck === 0) {
-			return res.status(404).json({
+			return res.status(200).json({
 				data: [],
 				pagination: {
 					total: 0,

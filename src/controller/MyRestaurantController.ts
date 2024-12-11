@@ -1,18 +1,17 @@
-import cloudinary from "cloudinary";
 import {Request, Response} from "express";
 import mongoose from "mongoose";
 import Order from "../models/order";
 import Restaurant from "../models/restaurant";
 
-const uploadImage = async (file: Express.Multer.File) => {
-	const image = file as Express.Multer.File;
-	const base64Image = Buffer.from(image.buffer).toString("base64");
-	const dataURL = `data:${image.mimetype};base64,${base64Image}`;
+// const uploadImage = async (file: Express.Multer.File) => {
+// 	const image = file as Express.Multer.File;
+// 	const base64Image = Buffer.from(image.buffer).toString("base64");
+// 	const dataURL = `data:${image.mimetype};base64,${base64Image}`;
 
-	const uploadResponse = await cloudinary.v2.uploader.upload(dataURL);
+// 	const uploadResponse = await cloudinary.v2.uploader.upload(dataURL);
 
-	return uploadResponse.url;
-};
+// 	return uploadResponse.url;
+// };
 
 // create Restaurant
 const createRestaurant = async (req: Request, res: Response) => {
@@ -24,9 +23,10 @@ const createRestaurant = async (req: Request, res: Response) => {
 		// }
 		req.body.cuisines = req.body.cuisines;
 		const restaurant = new Restaurant(req.body);
-		if (req.file) {
-			restaurant.imageUrl = await uploadImage(req.file);
-		}
+		// if (req.file) {
+		// 	restaurant.imageUrl = await uploadImage(req.file);
+		// }
+		restaurant.imageUrl = req.body.imageUrl;
 		restaurant.user = new mongoose.Types.ObjectId(req.userId);
 		await restaurant.save();
 
@@ -51,9 +51,10 @@ const updateRestaurant = async (req: Request, res: Response) => {
 		restaurant.estimatedDeliveryTime = req.body.estimatedDeliveryTime;
 		restaurant.cuisines = req.body.cuisines;
 		restaurant.menuItems = req.body.menuItems;
-		if (req.file) {
-			restaurant.imageUrl = await uploadImage(req.file);
-		}
+		restaurant.imageUrl = req.body.imageUrl as string;
+		// if (req.file) {
+		// 	restaurant.imageUrl = await uploadImage(req.file);
+		// }
 
 		await restaurant.save();
 		res.status(200).send(restaurant);
@@ -85,7 +86,7 @@ const getRestaurantOrder = async (req: Request, res: Response) => {
 		}
 		const ordersCheck = await Order.countDocuments({restaurant: restaurant._id});
 		if (ordersCheck === 0) {
-			return res.status(404).json({
+			return res.status(200).json({
 				data: [],
 				pagination: {
 					total: 0,
